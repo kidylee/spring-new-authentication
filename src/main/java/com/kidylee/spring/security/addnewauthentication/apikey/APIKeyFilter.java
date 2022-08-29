@@ -1,7 +1,5 @@
 package com.kidylee.spring.security.addnewauthentication.apikey;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -12,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 
 @Component("apiKeyFilter")
 public class APIKeyFilter extends OncePerRequestFilter {
@@ -22,7 +19,9 @@ public class APIKeyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("application-api-key");
         if (authorization != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            SecurityContextHolder.getContext().setAuthentication(new APIKeyAuthenticationToken(authorization));
+            SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+            emptyContext.setAuthentication(new APIKeyAuthenticationToken(authorization));
+            SecurityContextHolder.setContext(emptyContext);
         }
         filterChain.doFilter(request, response);
     }

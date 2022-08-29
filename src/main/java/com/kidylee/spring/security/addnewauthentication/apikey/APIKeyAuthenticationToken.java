@@ -20,6 +20,7 @@ public class APIKeyAuthenticationToken extends AbstractAuthenticationToken {
 
     UserDetails principal;
     String credentials;
+
     public APIKeyAuthenticationToken(String apikey) {
         super(Collections.EMPTY_LIST);
         this.credentials = apikey;
